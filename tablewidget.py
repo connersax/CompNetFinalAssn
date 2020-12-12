@@ -2,6 +2,8 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSlot
+from PyQt5 import QtGui
+from PyQt5 import QtCore
 
 class App(QWidget):
 
@@ -59,6 +61,10 @@ class App(QWidget):
                 #
                 # else:
                 self.tableWidget.setItem(row, column, QTableWidgetItem((wifi_networks[row][column])))
+                if (row%2) == 0:
+                    self.tableWidget.item(row,column).setBackground(QtGui.QColor('purple'))
+                else:
+                    self.tableWidget.item(row,column).setBackground(QtGui.QColor('blue'))
 
 
         #Table will fit the screen horizontally
