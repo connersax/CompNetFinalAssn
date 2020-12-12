@@ -60,19 +60,6 @@ class App(QWidget):
                 # else:
                 self.tableWidget.setItem(row, column, QTableWidgetItem((wifi_networks[row][column])))
 
-        # Rebecca u can remove this chunk, it served as our first attempt to populate the table
-        # self.tableWidget.setItem(0,0, QTableWidgetItem("The Pit Of Dispair"))
-        # self.tableWidget.setItem(0,1, QTableWidgetItem("52:6e:de:5c:58:25"))
-        # self.tableWidget.setItem(0,2, QTableWidgetItem('6'))
-        # self.tableWidget.setItem(0,3, QTableWidgetItem('-64'))
-        # self.tableWidget.setItem(0,4, QTableWidgetItem("{WPA2/PSK}"))
-        #
-        # self.tableWidget.setItem(1,0, QTableWidgetItem("DirtyBirdy"))
-        # self.tableWidget.setItem(1,1, QTableWidgetItem("50:c7:bf:31:60:96"))
-        # self.tableWidget.setItem(1,2, QTableWidgetItem('10'))
-        # self.tableWidget.setItem(1,3, QTableWidgetItem('-84'))
-        # self.tableWidget.setItem(1,4, QTableWidgetItem("{WPA/PSK, WPA2/PSK}"))
-
 
         #Table will fit the screen horizontally
         self.tableWidget.horizontalHeader().setStretchLastSection(True)
