@@ -3,7 +3,6 @@ from threading import Thread
 import pandas
 import time
 import os
-import pwd
 
 # initialize the networks dataframe that will contain all access points nearby
 networks = pandas.DataFrame(columns=["BSSID", "SSID", "dBm_Signal", "Channel", "Security"])
