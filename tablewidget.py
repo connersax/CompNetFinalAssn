@@ -1,15 +1,22 @@
-import sys
+import sys, os
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import pyqtSlot
-from PyQt5 import QtGui
-from PyQt5 import QtCore
+from PyQt5 import QtGui, QtCore
+from analyzer import get_networks
 
 class App(QWidget):
-
+    
     def __init__(self):
+        # Gets current wireless interface and then outputs the currently connected BSSID to a file for later use
+        os.system("iw dev | awk '$1==\"Interface\"{print $2}' > /tmp/wireless_interfaces")
+        interface = str(open("/tmp/wireless_interfaces", "r").readline()).strip()
+        os.system("rm /tmp/wireless_interfaces")
+        os.system("iwconfig %s | sed -n 's/.*Access Point: \([0-9\:A-F]\{17\}\).*/\\1/p' > /tmp/current_bssid" %interface)
+        
+        # Places the wireless card into monitor mode. Internet it unusable while in monitor mode.
+        os.system("bash monup.bash")
+
         super().__init__()
-        self.title = 'Test'
+        self.title = 'Wi-Fi Analyzer'
         self.left = 0
         self.top = 0
         self.width = 1100
@@ -32,14 +39,11 @@ class App(QWidget):
        # Create table
         self.tableWidget = QTableWidget()
 
-        # Make this less hardcoded
-        wifi_networks = [
-                ["The Pit Of Dispair", "52:6e:de:5c:58:25", 6, -64, "{WPA2/PSK}"],
-                ["The Pit Of Despair", "84:a0:6e:f0:7f:46", 11, -49, "{WPA2/PSK}"],
-                ["DirtyBirdy", "50:c7:bf:31:60:96", 10, -88, "{WPA/PSK, WPA2/PSK}"],
-                ["hello there", "a8:6a:bb:e6:8f:0e", 1, -89, "{WEP}"],
-                ["Lalonde", "10:be:f5:26:11:c8", 11, -91, "{WPA/PSK, WPA2/PSK}"],
-                ["COGECO-ABB00", "84:0b:7c:8a:bb:08", 11, -88, "{WPA2/PSK}"]]
+        current_bssid = open("/tmp/current_bssid", "r").readline().strip()
+        wifi_networks = get_networks()
+
+        # Brings wireless card back into managed mode
+        os.system("bash mondown.bash")
 
         # Values based on wifi_networks list
         numRows = len(wifi_networks)
@@ -50,21 +54,19 @@ class App(QWidget):
         self.tableWidget.setRowCount(numRows)
 
         # Added appropriate headers
-        self.tableWidget.setHorizontalHeaderLabels(('SSID', 'BSSID', 'Channel','Signal dBm','Security'))
+        self.tableWidget.setHorizontalHeaderLabels(('BSSID', 'SSID', 'Signal dBm','Channel','Security'))
         self.tableWidget.verticalHeader().setVisible(False)
 
         # Populate the table
         for row in range(numRows):
             for column in range(numCols):
-                # Set numbers to strings?
-                # if isinstance(wifi_networks[row][column],type(num)):
-                #
-                # else:
-                self.tableWidget.setItem(row, column, QTableWidgetItem((wifi_networks[row][column])))
-                if (row%2) == 0:
-                    self.tableWidget.item(row,column).setBackground(QtGui.QColor('purple'))
+                self.tableWidget.setItem(row, column, QTableWidgetItem((str(wifi_networks[row][column]))))
+                if (str(wifi_networks[row][0]).lower() == str(current_bssid).lower()):
+                    self.tableWidget.item(row,column).setBackground(QtGui.QColor('cyan'))
+                elif (row%2) == 0:
+                    self.tableWidget.item(row,column).setBackground(QtGui.QColor('white'))
                 else:
-                    self.tableWidget.item(row,column).setBackground(QtGui.QColor('blue'))
+                    self.tableWidget.item(row,column).setBackground(QtGui.QColor('gray'))
 
 
         #Table will fit the screen horizontally
