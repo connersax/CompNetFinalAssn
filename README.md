@@ -20,9 +20,9 @@ A Wi-Fi analyzer for Linux written in Python using the PyQt5 framework for the G
 2. Run `app.py` with sudo privileges.
 	- `sudo python3 app.py`
 
-Program takes a little bit to open to the GUI due to the it having to sniff 200 packets before the list of networks has been fully compiled.
+Program takes some time to open the GUI. This is because the application must sniff 200 packets before the list of networks has been fully compiled.
 
 ## Output
 - The output should be a window that looks like the image below
-- All the networks are also outputed to a file located in this folder named `output.txt`
+- All the networks are also stored to a file located in this folder named `output.txt`
 ![Demo Window](demo_window.png "Demo Window")
