@@ -7,9 +7,7 @@ import os
 # initialize the networks dataframe that will contain all access points nearby
 networks = pandas.DataFrame(columns=["BSSID", "SSID", "dBm_Signal", "Channel", "Security"])
 
-# set the index BSSID (MAC address of the access point)
-# UID and BSSID are the same and listed twice because when the get_networks() function is called
-# the BSSID will be included in the values returned
+# set the index to the BSSID (MAC address of the access point)
 networks.set_index("BSSID", inplace=True)
 
 
@@ -63,6 +61,7 @@ def change_channel(interface):
     while True:
         for ch in channels:
             os.system("iw dev | awk '$1==\"Interface\"{print $2}' > /tmp/wireless_interfaces")
+            # as long as the wireless card is in monitor mode then keep changing, else quit
             if "mon" in str(open("/tmp/wireless_interfaces", "r").readline()).strip():
                 print(f"{interface} = ch{ch}")
                 os.system(f"iwconfig {interface} channel {ch}")
